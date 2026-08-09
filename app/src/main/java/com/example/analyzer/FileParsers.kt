@@ -8,7 +8,24 @@ import java.util.zip.ZipInputStream
 object FileParsers {
 
     fun parseTxt(inputStream: InputStream): String {
-        return inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+        val bytes = inputStream.readBytes()
+        if (bytes.isEmpty()) return ""
+        val hasBom = bytes.size >= 3 && bytes[0] == 0xEF.toByte() && bytes[1] == 0xBB.toByte() && bytes[2] == 0xBF.toByte()
+        val bytesToRead = if (hasBom) bytes.copyOfRange(3, bytes.size) else bytes
+
+        return try {
+            val decoder = Charsets.UTF_8.newDecoder()
+                .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+                .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+            val charBuffer = decoder.decode(java.nio.ByteBuffer.wrap(bytesToRead))
+            charBuffer.toString()
+        } catch (e: Exception) {
+            try {
+                String(bytesToRead, java.nio.charset.Charset.forName("Windows-1256"))
+            } catch (ex: Exception) {
+                String(bytesToRead, Charsets.ISO_8859_1)
+            }
+        }
     }
 
     fun parseEpub(inputStream: InputStream): String {

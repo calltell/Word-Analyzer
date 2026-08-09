@@ -54,13 +54,13 @@ object TextAnalyzer {
         }
 
         // Split text into sentences for context extraction
-        val sentences = text.split(Regex("""(?<=[.!?])\s+"""))
+        val sentences = text.split(Regex("""(?<=[.!?؛؟\n])\s+"""))
             .map { it.trim().replace(Regex("""\s+"""), " ") }
-            .filter { it.length > 10 }
+            .filter { it.length > 5 }
 
-        // Tokenize words
-        val rawTokens = text.split(Regex("""[^a-zA-Z0-9'\-]+"""))
-            .map { it.lowercase().trim('\'', '-', ' ') }
+        // Tokenize words using Unicode character classes (\p{L} for Unicode letters, \p{N} for digits)
+        val rawTokens = text.split(Regex("""[^\p{L}\p{N}'\-]+"""))
+            .map { it.lowercase().trim('\'', '-', ' ', '؛', '،', '؟', '«', '»', '•') }
             .filter { it.length in filterMinLength..filterMaxLength }
 
         val totalWords = rawTokens.size
@@ -75,7 +75,7 @@ object TextAnalyzer {
 
         for (token in rawTokens) {
             if (token.length < filterMinLength || token.length > filterMaxLength) continue
-            if (token.all { it.isDigit() }) continue
+            if (token.all { it.isDigit() || it in '٠'..'٩' || it in '۰'..'۹' }) continue
             if (removeStopWords && StopWords.isStopWord(token, customStopWords)) continue
 
             val lemma = Lemmatizer.getLemma(token)

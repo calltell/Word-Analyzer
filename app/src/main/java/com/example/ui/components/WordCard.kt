@@ -81,15 +81,11 @@ fun WordCard(
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 // Rank & Word
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,
@@ -108,7 +104,7 @@ fun WordCard(
 
                     Spacer(modifier = Modifier.width(10.dp))
 
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = item.word,
@@ -128,7 +124,7 @@ fun WordCard(
                         }
 
                         // Persian Translation or Quick Translate
-                        if (!item.translation.isNull_or_blank()) {
+                        if (!item.translation.isNullOrBlank()) {
                             Text(
                                 text = item.translation!!,
                                 style = MaterialTheme.typography.bodyMedium,
@@ -148,50 +144,62 @@ fun WordCard(
                 }
 
                 // Badges & Action Buttons
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // CEFR Badge
-                    CefrBadge(level = item.cefrLevel)
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    // Frequency Badge
-                    Surface(
-                        shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.secondaryContainer
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text(
-                            text = "${item.frequency}× (${String.format("%.1f", item.percentage)}%)",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
+                        // CEFR Badge
+                        CefrBadge(level = item.cefrLevel)
+
+                        // Frequency Badge
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.secondaryContainer
+                        ) {
+                            Text(
+                                text = "${item.frequency}× (${String.format("%.1f", item.percentage)}%)",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
                     }
 
-                    IconButton(
-                        onClick = onToggleFavorite,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .testTag("favorite_button_${item.word}")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        Icon(
-                            imageVector = if (item.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                            contentDescription = "Favorite",
-                            tint = if (item.isFavorite) Color(0xFFF59E0B) else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+                        IconButton(
+                            onClick = onToggleFavorite,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .testTag("favorite_button_${item.word}")
+                        ) {
+                            Icon(
+                                imageVector = if (item.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                contentDescription = "Favorite",
+                                tint = if (item.isFavorite) Color(0xFFF59E0B) else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
 
-                    IconButton(
-                        onClick = onToggleLearned,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .testTag("learned_button_${item.word}")
-                    ) {
-                        Icon(
-                            imageVector = if (item.isLearned) Icons.Filled.CheckCircle else Icons.Outlined.CheckCircle,
-                            contentDescription = "Learned",
-                            tint = if (item.isLearned) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        IconButton(
+                            onClick = onToggleLearned,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .testTag("learned_button_${item.word}")
+                        ) {
+                            Icon(
+                                imageVector = if (item.isLearned) Icons.Filled.CheckCircle else Icons.Outlined.CheckCircle,
+                                contentDescription = "Learned",
+                                tint = if (item.isLearned) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }

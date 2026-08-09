@@ -91,20 +91,11 @@ class AnalyzerViewModel(application: Application) : AndroidViewModel(application
             }
         }
 
-        // Load initial sample text for instant demo
-        loadSampleText()
+        // App starts clean without default sample words
     }
 
     private fun loadSampleText() {
-        val sample = """
-            Welcome to the Word Analyzer and Translator application!
-            This powerful Android application allows you to import PDF documents, EPUB books, and plain TXT files.
-            You can analyze word frequency, extract lemmas, translate vocabulary to Persian, and export Anki flashcards.
-            Language learning becomes effortless when you focus on high frequency vocabulary and context sentences.
-            Enjoy reading, studying, and expanding your English knowledge with artificial intelligence and smart filters.
-        """.trimIndent()
-
-        processRawText(sample, "Welcome Guide", "TXT", saveHistory = false)
+        // Disabled sample text loading per user request
     }
 
     fun selectTab(tab: NavTab) {

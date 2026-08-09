@@ -1,0 +1,6 @@
+{
+  "name": "Word Analyzer & Translator",
+  "description": "PDF, EPUB, TXT word frequency analyzer, lemmatizer, translator, and Anki CSV exporter.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
